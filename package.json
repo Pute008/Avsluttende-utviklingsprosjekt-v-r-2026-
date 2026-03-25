@@ -1,0 +1,26 @@
+{
+  "name": "avsluttende-utviklingsprosjekt-v-r-2026-",
+  "version": "1.0.0",
+  "description": "I dette prosjektet skal jeg lage en nettside hvor du logge at du har vært på trening, hvor du kan bli venner med andre brukere. Administrator brukere kan opprette treningstimer som andre brukere kan melde seg på",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pute008/Avsluttende-utviklingsprosjekt-v-r-2026-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Pute008/Avsluttende-utviklingsprosjekt-v-r-2026-/issues"
+  },
+  "homepage": "https://github.com/Pute008/Avsluttende-utviklingsprosjekt-v-r-2026-#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "better-sqlite3": "^12.8.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
+}
