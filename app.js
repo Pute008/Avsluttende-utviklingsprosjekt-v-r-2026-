@@ -62,8 +62,9 @@ app.post("/newUser", async (req, res) => {
     res.json({ message: "New user created", info })
 });
 
-app.get('/', kreverInnlogging, (req, res) => {
-
+app.get('/users', kreverInnlogging, (req, res) => {
+    const users = db.prepare("SELECT * from users").all();
+    res.json(users);
 })
 
 app.post('/', kreverInnlogging, (req, res) => {
