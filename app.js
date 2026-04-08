@@ -71,6 +71,14 @@ app.get('/main', kreverInnlogging, (req, res) => {
     res.sendFile(__dirname + "/hidden/index.html");
 })
 
+app.get('/activity', kreverInnlogging, (req, res) => {
+    res.sendFile(__dirname + "/hidden/activity.html");
+})
+
+app.get('/friendList', kreverInnlogging, (req, res) => {
+    res.sendFile(__dirname + "/hidden/friendList.html");
+})
+
 app.delete('/', kreverInnlogging, (req, res) => {
 
 })
