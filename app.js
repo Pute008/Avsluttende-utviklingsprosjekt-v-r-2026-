@@ -3,14 +3,14 @@ const session = require("express-session");
 const app = express();
 
 const Database = require("better-sqlite3");
-// const db = new Database("");
+const db = new Database("treningDatabase.db");
 
 const cors = require("cors");
 app.use(cors());
 
 const bcrypt = require("bcrypt");
 
-app.use(express.static('public'))
+app.use(express.static("public"));
 
 app.use(express.json());
 
@@ -26,7 +26,7 @@ app.use(
 );
 
 function kreverInnlogging(req, res, next) {
-    if(!req.session.user) {
+    if(!req.session.users) {
         return res.redirect('/index.html');
     }
     next();
@@ -34,17 +34,17 @@ function kreverInnlogging(req, res, next) {
 
 app.post("/login", async (req, res) => {
     const { email, password } = req.body;
-    const user = db.prepare("SELECT * FROM user WHERE email = ?").get(email);
-    if (!user) {
+    const users = db.prepare("SELECT * FROM users WHERE email = ?").get(email);
+    if (!users) {
         return res.status(401).json({ message: "Wrong email or password" });
     }
 
-    const passordErGyldig = await bcrypt.compare(password, user.password);
+    const passordErGyldig = await bcrypt.compare(password, users.password);
     if (!passordErGyldig) {
         return res.status(401).json({ message: "Wrong email or password"})
     }
 
-    req.session.user = { id: user.IDuser, name: user.name };
+    req.session.users = { id: users.IDuser, name: users.name };
     res.json({ message: "Login successful", redirect: "/main" })
 })
 
@@ -54,12 +54,12 @@ app.post("/logout", (req, res) => {
 })
 
 app.post("/newUser", async (req, res) => {
-    const { name, email, password } = req.body;
+    const { firstname, lastname, email, password } = req.body;
     const saltRounds = 10;
     const hashPassword = await bcrypt.hash(password, saltRounds);
-    const stmt = db.prepare("INSERT INTO user (name, email, password) VALUES (?, ?, ?)");
-    const info = stmt.run(name, email, hashPassword);
-    res.json({ message: "New user created", info })
+    const stmt = db.prepare("INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)");
+    const info = stmt.run(firstname, lastname, email, hashPassword);
+    res.json({ message: "New users created", info })
 });
 
 app.get('/users', kreverInnlogging, (req, res) => {
@@ -67,8 +67,8 @@ app.get('/users', kreverInnlogging, (req, res) => {
     res.json(users);
 })
 
-app.post('/', kreverInnlogging, (req, res) => {
-    
+app.get('/main', kreverInnlogging, (req, res) => {
+    res.sendFile(__dirname + "/hidden/index.html");
 })
 
 app.delete('/', kreverInnlogging, (req, res) => {
