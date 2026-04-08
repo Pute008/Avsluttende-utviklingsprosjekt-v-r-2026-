@@ -27,6 +27,7 @@ document.getElementById("newUserForm").addEventListener("submit", async function
 
         const firstname = document.getElementById("firstname").value;
         const lastname = document.getElementById("lastname").value;
+        const tlf = document.getElementById("tlf").value;
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
@@ -39,6 +40,7 @@ document.getElementById("newUserForm").addEventListener("submit", async function
             body: JSON.stringify({
                 firstname,
                 lastname,
+                tlf,
                 email,
                 password
             })
