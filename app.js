@@ -57,7 +57,7 @@ app.post("/newUser", async (req, res) => {
     const { firstname, lastname, tlf, email, password } = req.body;
     const saltRounds = 10;
     const hashPassword = await bcrypt.hash(password, saltRounds);
-    const stmt = db.prepare("INSERT INTO users (firstname, lastname, tlfNumber email, password) VALUES (?, ?, ?, ?, ?)");
+    const stmt = db.prepare("INSERT INTO users (firstname, lastname, tlfNumber, email, password) VALUES (?, ?, ?, ?, ?)");
     const info = stmt.run(firstname, lastname, tlf, email, hashPassword);
     res.json({ message: "New users created", info })
 });
