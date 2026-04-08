@@ -10,6 +10,8 @@ app.use(cors());
 
 const bcrypt = require("bcrypt");
 
+app.use(express.static("public"));
+
 app.use(express.json());
 
 const port = 3000
@@ -17,21 +19,16 @@ const port = 3000
 app.use(
     session({
         secret: "hemmeligNøkkel",
-        resave: true,
-        saveUninitialized: true,
-        cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 }
+        resave: false,
+        saveUninitialized: false,
+        cookie: { secure: false }
     })
 );
 
-app.use(express.static("public"));
-
 function kreverInnlogging(req, res, next) {
-    console.log("Auth check - Session ID:", req.sessionID, "User:", req.session.users);
     if(!req.session.users) {
-        console.log("Not authenticated, redirecting to login");
         return res.redirect('/index.html');
     }
-    console.log("Authenticated, allowing access");
     next();
 }
 
@@ -57,19 +54,12 @@ app.post("/logout", (req, res) => {
 })
 
 app.post("/newUser", async (req, res) => {
-    try {
-        const { firstname, lastname, tlf, email, password } = req.body;
-        console.log("Creating new user:", email);
-        const saltRounds = 10;
-        const hashPassword = await bcrypt.hash(password, saltRounds);
-        const stmt = db.prepare("INSERT INTO users (firstname, lastname, tlfNumber, email, password) VALUES (?, ?, ?, ?, ?)");
-        const info = stmt.run(firstname, lastname, tlf, email, hashPassword);
-        console.log("User created successfully:", email);
-        res.json({ message: "New user created", info })
-    } catch (error) {
-        console.error("Error creating user:", error.message);
-        res.status(500).json({ message: "Error: " + error.message });
-    }
+    const { firstname, lastname, tlf, email, password } = req.body;
+    const saltRounds = 10;
+    const hashPassword = await bcrypt.hash(password, saltRounds);
+    const stmt = db.prepare("INSERT INTO users (firstname, lastname, tlfNumber email, password) VALUES (?, ?, ?, ?, ?)");
+    const info = stmt.run(firstname, lastname, tlf, email, hashPassword);
+    res.json({ message: "New users created", info })
 });
 
 app.get('/users', kreverInnlogging, (req, res) => {
