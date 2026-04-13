@@ -45,7 +45,7 @@ app.post("/login", async (req, res) => {
     }
 
     req.session.users = { id: users.IDuser, name: users.name };
-    res.json({ message: "Login successful", redirect: "/main" })
+    res.json({ message: "Login successful", redirect: "index2.html" })
 })
 
 app.post("/logout", (req, res) => {
@@ -68,7 +68,7 @@ app.get('/users', kreverInnlogging, (req, res) => {
 })
 
 app.get('/main', kreverInnlogging, (req, res) => {
-    res.sendFile(__dirname + "/hidden/index.html");
+    res.sendFile(__dirname + "/index.html");
 })
 
 app.get('/activity', kreverInnlogging, (req, res) => {
@@ -84,7 +84,13 @@ app.get('/classes', kreverInnlogging, (req, res) => {
 })
 
 app.get('/showAllClasses', kreverInnlogging, (req, res) => {
-    
+    try {
+        const allClasses = db.prepare(`SELECT classes.title, classes.notes, classes.instructor, classes.maxParticipants, classes.timeMinutes FROM classes`).all();
+        res.json(allClasses);
+    } catch (error) {
+        console.error("Error after catching classes:", error);
+        res.status(500).json({ message: "Could not get classes" });
+    }
 })
 
 app.delete('/', kreverInnlogging, (req, res) => {
