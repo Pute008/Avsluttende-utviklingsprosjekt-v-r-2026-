@@ -9,7 +9,7 @@ Hva jeg må ha med
 - [x] hidden mappe
 - [X] ruter og api endepunkter
 
-- [ ] friend-list
+- [ ] friend-list (skrivefunksjon! folk må skrive inn ID-en!)
 - [ ] activity
 - [ ] classes
 - [ ] logout (må jobbe mer med)
