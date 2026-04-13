@@ -85,7 +85,11 @@ app.get('/classes', kreverInnlogging, (req, res) => {
 
 app.get('/showAllClasses', kreverInnlogging, (req, res) => {
     try {
-        const allClasses = db.prepare(`SELECT classes.title, classes.notes, classes.instructor, classes.maxParticipants, classes.timeMinutes FROM classes`).all();
+        const allClasses = db.prepare(`SELECT classes.title, classes.notes,
+            users.firstname, users.lastname, classes.maxParticipants, classes.timeMinutes
+            FROM classes
+            INNER JOIN users
+            ON classes.instructor = users.id;`).all();
         res.json(allClasses);
     } catch (error) {
         console.error("Error after catching classes:", error);

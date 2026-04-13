@@ -23,16 +23,20 @@ async function showClasses () {
             notes.textContent = classItem.notes;
             rad.appendChild(notes);
 
-            const instructor = document.createElement("p")
-            instructor.textContent = classItem.instructor;
-            rad.appendChild(instructor);
+            // const instructor = document.createElement("p")
+            // instructor.textContent = classItem.instructor;
+            // rad.appendChild(instructor);
+
+            const fullName = document.createElement("p");
+            fullName.textContent = `${classItem.firstname} ${classItem.lastname}`;
+            rad.appendChild(fullName);
 
             const maxParticipants = document.createElement("p")
-            maxParticipants.textContent = classItem.maxParticipants;
+            maxParticipants.textContent = "Max Participants: " + classItem.maxParticipants;
             rad.appendChild(maxParticipants);
 
             const timeMinutes = document.createElement("p")
-            timeMinutes.textContent = classItem.timeMinutes;
+            timeMinutes.textContent = "Duration (minutes): " + classItem.timeMinutes;
             rad.appendChild(timeMinutes);
 
             tabellBody.appendChild(rad);
