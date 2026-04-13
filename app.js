@@ -97,6 +97,16 @@ app.get('/showAllClasses', kreverInnlogging, (req, res) => {
     }
 })
 
+app.get('/showAllFriends', kreverInnlogging, (req, res) => {
+    try {
+        const allFriends = db.prepare(`--`).all();
+        res.json(allFriends);
+    } catch (error) {
+        console.error("Error after catching friends:", error);
+        res.status(500).json({ message: "Could not get friends" });
+    }
+})
+
 app.delete('/', kreverInnlogging, (req, res) => {
 
 })

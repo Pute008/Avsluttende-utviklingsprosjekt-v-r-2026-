@@ -1,8 +1,7 @@
-
-async function showClasses () {
-    const tabellBody = document.querySelector("#classList");
+async function showFriends () {
+    const tabellBody = document.querySelector("#friendList");
     try {
-        const response = await fetch("/showAllClasses")
+        const response = await fetch("/showAllFriends")
         if (!response.ok) {
             throw new Error("Could not get the classes. Are you logged in?");
         }
@@ -47,5 +46,5 @@ async function showClasses () {
     }
 }
 
-// KJØRER FUNKSJONEN
-document.addEventListener("DOMContentLoaded", showClasses);
+// Call the function when the page loads
+document.addEventListener("DOMContentLoaded", showFriends);
