@@ -75,6 +75,16 @@ app.get('/activity', kreverInnlogging, (req, res) => {
     res.sendFile(__dirname + "/hidden/activity.html");
 })
 
+app.get('/showYourActivity', kreverInnlogging, (req, res) => {
+    try {
+        const allClasses = db.prepare(`--`).all();
+        res.json(allClasses);
+    } catch (error) {
+        console.error("Error after catching classes:", error);
+        res.status(500).json({ message: "Could not get classes" });
+    }
+})
+
 app.get('/friendList', kreverInnlogging, (req, res) => {
     res.sendFile(__dirname + "/hidden/friendList.html");
 })

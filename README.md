@@ -10,7 +10,8 @@ Hva jeg må ha med
 - [X] ruter og api endepunkter
 
 - [ ] friend-list (skrivefunksjon! folk må skrive inn ID-en!)
-- [ ] activity
+- [ ] activity ()
+- [ ] registration (lage en lenke av url-en)
 - [ ] classes
 - [ ] logout (må jobbe mer med)
 
