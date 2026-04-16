@@ -44,7 +44,7 @@ app.post("/login", async (req, res) => {
         return res.status(401).json({ message: "Wrong email or password"})
     }
 
-    req.session.users = { id: users.IDuser, name: users.name };
+    req.session.users = { id: users.id, firstname: users.firstname, lastname: users.lastname };
     res.json({ message: "Login successful", redirect: "index2.html" })
 })
 
@@ -78,11 +78,14 @@ app.get('/activity', kreverInnlogging, (req, res) => {
 // lage sql spørring
 app.get('/showYourActivity', kreverInnlogging, (req, res) => {
     try {
-        const allClasses = db.prepare(`--`).all();
-        res.json(allClasses);
+        const userID = req.session.users.id;
+        console.log("Fetching activities for UserID:", userID);
+        const allActivities = db.prepare(`SELECT * FROM activity WHERE userID = ?`).all(userID);
+        console.log("Activities found:", allActivities);
+        res.json(allActivities);
     } catch (error) {
-        console.error("Error after catching classes:", error);
-        res.status(500).json({ message: "Could not get classes" });
+        console.error("Error after catching activities:", error);
+        res.status(500).json({ message: "Could not get activities" });
     }
 })
 
@@ -90,6 +93,8 @@ app.get('/showYourActivity', kreverInnlogging, (req, res) => {
 app.post('/addActivity', kreverInnlogging, (req, res) => {
     const { activity, date, duration } = req.body;
     const userID = req.session.users.id;
+    console.log("Session data:", req.session.users);
+    console.log("Adding activity - UserID:", userID, "Activity:", activity, "Date:", date, "Duration:", duration);
     try {
         const stmt = db.prepare(`INSERT INTO activity (activity, date, duration, userID) VALUES (?, ?, ?, ?)`);
         const info = stmt.run(activity, date, duration, userID);

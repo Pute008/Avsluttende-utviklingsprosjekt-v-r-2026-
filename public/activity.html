@@ -18,21 +18,23 @@
     <main>
         <form onsubmit="addActivity(event)">
             <label for="activity">Activity</label>
-            <select name="activity" id="activity">
-                <option value="">Select activity</option>
-                <option value="running">Running</option>
-                <option value="cycling">Cycling</option>
-                <option value="swimming">swimming</option>
+            <select name="activity" id="activity" required>
+                <option value="" disabled selected>Select activity</option>
+                <option value="Running">Running</option>
+                <option value="Cycling">Cycling</option>
+                <option value="Swimming">swimming</option>
             </select>
             
             <label for="date">Date</label>
-            <input type="date" id="date">
+            <input type="date" id="date" required>
 
             <label for="duration">Duration (min)</label>
-            <input type="number" min="0" id="duration">
+            <input type="number" min="0" id="duration" required>
 
             <button type="submit">Submit</button>
         </form>
+
+        <div id="activities-list"></div>
     </main>
     <footer>
 
