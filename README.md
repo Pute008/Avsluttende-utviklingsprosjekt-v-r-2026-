@@ -8,11 +8,12 @@ Hva jeg må ha med
 - [x] public mappe
 - [x] hidden mappe
 - [X] ruter og api endepunkter
+- [X] classes - viser klassene
 
 - [ ] friend-list (skrivefunksjon! folk må skrive inn ID-en!)
 - [ ] activity ()
 - [ ] registration (lage en lenke av url-en)
-- [ ] classes
+
 - [ ] logout (må jobbe mer med)
 
 
