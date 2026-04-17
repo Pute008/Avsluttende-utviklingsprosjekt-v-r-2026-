@@ -33,18 +33,6 @@ async function showClasses () {
             title.textContent = classItem.title;
             rad.appendChild(title);
 
-            const notes = document.createElement("p");
-            notes.textContent = classItem.notes;
-            rad.appendChild(notes);
-
-            // const instructor = document.createElement("p")
-            // instructor.textContent = classItem.instructor;
-            // rad.appendChild(instructor);
-
-            const fullName = document.createElement("p");
-            fullName.textContent = `Instructor: ${classItem.firstname} ${classItem.lastname}`;
-            rad.appendChild(fullName);
-
             const maxParticipants = document.createElement("p")
             maxParticipants.textContent = "Max Participants: " + classItem.maxParticipants;
             rad.appendChild(maxParticipants);
@@ -55,8 +43,8 @@ async function showClasses () {
 
             // knapp som kommer opp
             const button = document.createElement("button");
-            button.textContent = "Register as Activity";
-            button.onclick = () => registerClassAsActivity(classItem);
+            button.textContent = "More Info";
+            button.onclick = () => window.location.href = "/classes.html";
             rad.appendChild(button);
 
             tabellBody.appendChild(rad);
@@ -66,3 +54,4 @@ async function showClasses () {
         tabellBody.innerHTML = `<div>Could not get the classes: ${error.message}</div>`;
     }
 }
+showClasses()

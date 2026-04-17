@@ -22,10 +22,6 @@ async function showFriends () {
             notes.textContent = classItem.notes;
             rad.appendChild(notes);
 
-            // const instructor = document.createElement("p")
-            // instructor.textContent = classItem.instructor;
-            // rad.appendChild(instructor);
-
             const fullName = document.createElement("p");
             fullName.textContent = `Instructor: ${classItem.firstname} ${classItem.lastname}`;
             rad.appendChild(fullName);
