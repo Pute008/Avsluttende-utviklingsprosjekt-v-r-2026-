@@ -75,7 +75,6 @@ app.get('/activity', kreverInnlogging, (req, res) => {
     res.sendFile(__dirname + "/hidden/activity.html");
 })
 
-// lage sql spørring
 app.get('/showYourActivity', kreverInnlogging, (req, res) => {
     try {
         const userID = req.session.users.id;
@@ -89,12 +88,12 @@ app.get('/showYourActivity', kreverInnlogging, (req, res) => {
     }
 })
 
-// legge til sql spørring
+// denne spørringen blir også brukt i classes.js for å legge til at du har vært med i en klassetime
 app.post('/addActivity', kreverInnlogging, (req, res) => {
     const { activity, date, duration } = req.body;
     const userID = req.session.users.id;
-    console.log("Session data:", req.session.users);
-    console.log("Adding activity - UserID:", userID, "Activity:", activity, "Date:", date, "Duration:", duration);
+    // console.log("Session data:", req.session.users);
+    // console.log("Adding activity - UserID:", userID, "Activity:", activity, "Date:", date, "Duration:", duration);
     try {
         const stmt = db.prepare(`INSERT INTO activity (activity, date, duration, userID) VALUES (?, ?, ?, ?)`);
         const info = stmt.run(activity, date, duration, userID);

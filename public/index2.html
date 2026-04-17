@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
-    <!-- <script src="script.js" defer></script> -->
+    <script src="home.js" defer></script>
 </head>
 <body>
     <header><h1>Treningsnettside</h1></header>
@@ -18,25 +18,12 @@
         </ul>
     </menu>
     <main>
+        <div id="classList">
 
+        </div>
     </main>
     <footer>
         <button onclick="logout()">Logout</button>
     </footer>
-
-    <script>
-    async function logout() {
-        const response = await fetch("/logout", {
-            method: "POST"
-        });
-
-        if (response.ok) {
-            alert("You are logged out.");
-            window.location.href = "/";
-        } else {
-            alert("Something went wrong");
-        }
-    }
-    </script>
 </body>
 </html>

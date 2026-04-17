@@ -1,3 +1,17 @@
+// this is for index2.html
+
+async function logout() {
+    const response = await fetch("/logout", {
+        method: "POST"
+    });
+
+    if (response.ok) {
+        alert("You are logged out.");
+        window.location.href = "/";
+    } else {
+        alert("Something went wrong");
+    }
+}
 
 async function showClasses () {
     const tabellBody = document.querySelector("#classList");
@@ -52,29 +66,3 @@ async function showClasses () {
         tabellBody.innerHTML = `<div>Could not get the classes: ${error.message}</div>`;
     }
 }
-
-async function registerClassAsActivity(classItem) {
-    const today = new Date().toISOString().split('T')[0]; // Gets today's date in YYYY-MM-DD format
-    
-    try {
-        const response = await fetch("/addActivity", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                activity: classItem.title,
-                date: today,
-                duration: classItem.timeMinutes
-            })
-        });
-        
-        const result = await response.json();
-        alert(result.message);
-    } catch (error) {
-        console.error("Error registering class as activity:", error);
-        alert("Feil: " + error.message);
-    }
-}
-// KJØRER FUNKSJONEN
-document.addEventListener("DOMContentLoaded", showClasses);
