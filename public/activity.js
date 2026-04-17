@@ -30,7 +30,7 @@ async function loadActivities() {
     try {
         const response = await fetch("/showYourActivity");
         const activities = await response.json();
-        console.log("Your activities:", activities);
+        // console.log("Your activities:", activities);
         
         let html = "<h2>Your Activities</h2>";
         if (activities.length === 0) {
