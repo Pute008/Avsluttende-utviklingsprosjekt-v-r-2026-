@@ -20,7 +20,7 @@ async function showClasses () {
             rad.appendChild(title);
 
             const notes = document.createElement("p");
-            notes.textContent = classItem.notes;
+            notes.textContent = "Notes: " + classItem.notes;
             rad.appendChild(notes);
 
             // const instructor = document.createElement("p")
