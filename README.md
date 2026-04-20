@@ -11,7 +11,7 @@ Hva jeg må ha med
 - [X] classes - viser klassene
 
 - [ ] friend-list (skrivefunksjon! folk må skrive inn ID-en!)
-- [ ] activity ()
+- [ ] activity (bruke chart-js for å lage statistikk)
 - [ ] registration (lage en lenke av url-en)
 
 - [ ] logout (må jobbe mer med)
