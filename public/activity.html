@@ -36,9 +36,21 @@
         </form>
 
         <div id="activities-list"></div>
+
+        <div>
+            <h2>Training This Week</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <button onclick="previousWeek()" style="padding: 8px 15px;">← Previous Week</button>
+                <span id="weekDisplay" style="font-weight: bold;"></span>
+                <button onclick="nextWeek()" style="padding: 8px 15px;">Next Week →</button>
+            </div>
+            <canvas id="myChart"></canvas>
+        </div>
     </main>
     <footer>
 
     </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

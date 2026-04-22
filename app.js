@@ -67,6 +67,12 @@ app.get('/users', kreverInnlogging, (req, res) => {
     res.json(users);
 })
 
+app.get('/userInfo', kreverInnlogging, (req, res) => {
+    const userID = req.session.users.id;
+    const user = db.prepare("SELECT * FROM users WHERE id = ?").get(userID);
+    res.json(user);
+})
+
 app.get('/main', kreverInnlogging, (req, res) => {
     res.sendFile(__dirname + "/index.html");
 })
