@@ -84,9 +84,9 @@ app.get('/activity', kreverInnlogging, (req, res) => {
 app.get('/showYourActivity', kreverInnlogging, (req, res) => {
     try {
         const userID = req.session.users.id;
-        console.log("Fetching activities for UserID:", userID);
+        // console.log("Fetching activities for UserID:", userID);
         const allActivities = db.prepare(`SELECT * FROM activity WHERE userID = ?`).all(userID);
-        console.log("Activities found:", allActivities);
+        // console.log("Activities found:", allActivities);
         res.json(allActivities);
     } catch (error) {
         console.error("Error after catching activities:", error);
@@ -143,7 +143,34 @@ app.get('/showAllFriends', kreverInnlogging, (req, res) => {
     }
 })
 
-app.delete('/', kreverInnlogging, (req, res) => {
+
+
+
+
+
+
+
+
+
+
+app.post("/loginDelete", kreverInnlogging, async (req, res) => {
+    const { email, password } = req.body;
+    const users = db.prepare("SELECT * FROM users WHERE email = ?").get(email);
+    if (!users) {
+        return res.status(401).json({ message: "Wrong email or password" });
+    }
+
+    const passordErGyldig = await bcrypt.compare(password, users.password);
+    if (!passordErGyldig) {
+        return res.status(401).json({ message: "Wrong email or password"})
+    }
+
+    req.session.users = { id: users.id, firstname: users.firstname, lastname: users.lastname };
+    res.json({ message: "Login successful", redirect: "index.html" })
+})
+
+app.delete('/deleteUser', kreverInnlogging, (req, res) => {
+    const userID = req.session.users.id;
 
 })
 

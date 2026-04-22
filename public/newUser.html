@@ -22,7 +22,8 @@
         <input type="email" id="email" name="email" required><br>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br>
+        <input type="password" id="password" name="password" required minlength="6"><br>
+        <p id="demo"></p>
 
         <button type="submit">Create User</button>
     </form>
@@ -59,6 +60,11 @@
         alert(result.message);
         window.location.href='./index.html';
     })
+
+    // function passwordLength() {
+    //     document.getElementById("password").maxLength = "6";
+    //     document.getElementById("demo").innerHTML = "Maximum number of characters allowed in the password field is now 6.";
+    // }
     </script>
 </body>
 </html>
