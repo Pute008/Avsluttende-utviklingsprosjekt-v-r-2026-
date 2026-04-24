@@ -1,4 +1,14 @@
 # Avsluttende-utviklingsprosjekt-vår-2026-
+av Felix Ellingsen Westby
+
+| Component | Kodespråk / teknologi |
+|-----------|--------------|
+| Frontend | HTML5, CSS, JavaScript |
+| Backend | Node.JS, Express.JS |
+| Database | SQLite |
+| Server Port | 3000 |
+
+## Notater
 
 I dette prosjektet skal jeg lage en nettside hvor du logge at du har vært på trening, hvor du kan bli venner med andre brukere. Administrator brukere kan opprette treningstimer som andre brukere kan melde seg på
 
@@ -17,3 +27,21 @@ Hva jeg må ha med
 - [ ] logout (må jobbe mer med)
 
 
+## Hva jeg lager
+aaaaa
+
+## Databasen
+
+## Backend
+
+### app.js
+
+## Backend
+
+### index
+
+### classes
+
+### options - delete user
+
+### activity
