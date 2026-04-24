@@ -165,14 +165,68 @@ app.post("/loginDelete", kreverInnlogging, async (req, res) => {
         return res.status(401).json({ message: "Wrong email or password"})
     }
 
-    req.session.users = { id: users.id, firstname: users.firstname, lastname: users.lastname };
-    res.json({ message: "Login successful", redirect: "index.html" })
+    res.json({ message: "Successful" });
 })
 
 app.delete('/deleteUser', kreverInnlogging, (req, res) => {
+    const { email, password } = req.body;
     const userID = req.session.users.id;
 
+
+    try {
+        const stmt = db.prepare("DELETE FROM users WHERE id = ?");
+        stmt.run(userID)
+        req.session.destroy();
+        res.json({ message: "User was successfully deleted", redirect: "index.html" })
+    } catch (error) {
+        console.error("Feil ved sletting av kort:", error);
+        res.status(500).json({ message: "Kunne ikke slette kortet" });
+    }
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// app.post("/deleteUser", kreverInnlogging, async (req, res) => {
+//     const { email, password } = req.body;
+//     const userID = req.session.users.id;
+
+//     const user = db.prepare("SELECT * FROM users WHERE id = ?").get(userID);
+//     if (!user) {
+//         return res.status(404).json({ message: "User not found" });
+//     }
+
+//     // Verify the email matches the logged-in user
+//     if (user.email !== email) {
+//         return res.status(401).json({ message: "Wrong email or password" });
+//     }
+
+//     const passwordIsValid = await bcrypt.compare(password, user.password);
+//     if (!passwordIsValid) {
+//         return res.status(401).json({ message: "Wrong email or password" });
+//     }
+
+//     try {
+//         db.prepare("DELETE FROM users WHERE id = ?").run(userID);
+//         req.session.destroy();
+//         res.json({ message: "User was successfully deleted", redirect: "index.html" });
+//     } catch (error) {
+//         console.error("Error deleting user:", error);
+//         res.status(500).json({ message: "Could not delete user" });
+//     }
+// });
+
+
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`)

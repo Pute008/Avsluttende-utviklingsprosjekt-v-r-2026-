@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
-    <script src="options.js" defer></script>
+    <script src="deleteUser.js" defer></script>
 </head>
 <body>
-    <header>Options</header>
+    <header>Test: delete user</header>
     <menu>
         <li><a href="index2.html">Main</a></li>
         <li><a href="options.html">Options</a></li>
@@ -17,24 +17,16 @@
         <li><a href="classes.html">Classes</a></li>
     </menu>
     <main>
-        <div id="userInfo">
-            <!-- skal vise brukeren sitt navn, epost og id -->
-        </div>
+        <!-- <form onsubmit="deleteUser(event)"> -->
+        <form onsubmit="loginPersonDelete(event)">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
 
-        <div id="deleteUserForm">
-            <p><a href="deleteUser.html">Delete User</a></p>
-            <!-- <form>
-                
-            </form> -->
-        </div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br>
 
-        <div>
-            <button onclick="logout()">Logout</button>
-        </div>
-
-        <div>
-            <!-- skal være en logout funksjon (kanskje et popup vindu?) -->
-        </div>
+            <button type="submit">Logg inn</button>
+        </form>
     </main>
     <footer></footer>
 </body>
