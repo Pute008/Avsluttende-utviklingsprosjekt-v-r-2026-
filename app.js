@@ -44,6 +44,11 @@ app.post("/login", async (req, res) => {
         return res.status(401).json({ message: "Wrong email or password"})
     }
 
+    // lage administrator konto
+    // if (user) {
+    //     req.session.users = { id: users.id, firstname: users.firstname, lastname: users.lastname };
+    // }
+
     req.session.users = { id: users.id, firstname: users.firstname, lastname: users.lastname };
     res.json({ message: "Login successful", redirect: "index2.html" })
 })
@@ -154,12 +159,20 @@ app.get('/showAllFriends', kreverInnlogging, (req, res) => {
 
 
 app.post("/loginDelete", kreverInnlogging, async (req, res) => {
+    // henter email og passord fra html
     const { email, password } = req.body;
     const users = db.prepare("SELECT * FROM users WHERE email = ?").get(email);
+    // sjekker om brukeren er riktig
     if (!users) {
         return res.status(401).json({ message: "Wrong email or password" });
     }
 
+    // sjekker om id-en din samsvarer med session id-en
+    if (users.id !== req.session.users.id) {
+        return res.status(403).json({ message: "Wrong email or password" });
+    }
+
+    // sjekker om passord er riktig
     const passordErGyldig = await bcrypt.compare(password, users.password);
     if (!passordErGyldig) {
         return res.status(401).json({ message: "Wrong email or password"})
@@ -171,8 +184,6 @@ app.post("/loginDelete", kreverInnlogging, async (req, res) => {
 app.delete('/deleteUser', kreverInnlogging, (req, res) => {
     const { email, password } = req.body;
     const userID = req.session.users.id;
-
-
     try {
         const stmt = db.prepare("DELETE FROM users WHERE id = ?");
         stmt.run(userID)
