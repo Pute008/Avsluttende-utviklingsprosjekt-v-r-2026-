@@ -63,6 +63,7 @@ app.post("/newUser", async (req, res) => {
     const saltRounds = 10;
     const hashPassword = await bcrypt.hash(password, saltRounds);
     const stmt = db.prepare("INSERT INTO users (firstname, lastname, tlfNumber, email, password) VALUES (?, ?, ?, ?, ?)");
+    // oppsummerer operasjonen som har blitt utført
     const info = stmt.run(firstname, lastname, tlf, email, hashPassword);
     res.json({ message: "New users created", info })
 });
@@ -78,6 +79,7 @@ app.get('/userInfo', kreverInnlogging, (req, res) => {
     res.json(user);
 })
 
+// typisk rute som sender deg til et html-element
 app.get('/main', kreverInnlogging, (req, res) => {
     res.sendFile(__dirname + "/index.html");
 })
@@ -86,13 +88,14 @@ app.get('/activity', kreverInnlogging, (req, res) => {
     res.sendFile(__dirname + "/hidden/activity.html");
 })
 
+// rute som viser aktiviteter
 app.get('/showYourActivity', kreverInnlogging, (req, res) => {
     try {
+        // henter user id fra session
         const userID = req.session.users.id;
-        // console.log("Fetching activities for UserID:", userID);
         const allActivities = db.prepare(`SELECT * FROM activity WHERE userID = ?`).all(userID);
-        // console.log("Activities found:", allActivities);
         res.json(allActivities);
+    // hvis denne koden ikke fungerer kjører den denne erroren
     } catch (error) {
         console.error("Error after catching activities:", error);
         res.status(500).json({ message: "Could not get activities" });
@@ -101,6 +104,7 @@ app.get('/showYourActivity', kreverInnlogging, (req, res) => {
 
 // denne spørringen blir også brukt i classes.js for å legge til at du har vært med i en klassetime
 app.post('/addActivity', kreverInnlogging, (req, res) => {
+    // henter info fra html-element
     const { activity, date, duration } = req.body;
     const userID = req.session.users.id;
     // console.log("Session data:", req.session.users);
@@ -138,6 +142,7 @@ app.get('/showAllClasses', kreverInnlogging, (req, res) => {
 })
 
 // må oppdatere og fikse sql spørringen
+// PS: denne koden funker ikke!
 app.get('/showAllFriends', kreverInnlogging, (req, res) => {
     try {
         const allFriends = db.prepare(`--`).all();
@@ -148,11 +153,12 @@ app.get('/showAllFriends', kreverInnlogging, (req, res) => {
     }
 })
 
+// rute for å verifisere sletting
 app.post("/loginDelete", kreverInnlogging, async (req, res) => {
-    // henter email og passord fra html
+    // henter email og passord fra html-element
     const { email, password } = req.body;
     const users = db.prepare("SELECT * FROM users WHERE email = ?").get(email);
-    // sjekker om brukeren er riktig
+    // sjekker om brukeren er riktig (email)
     if (!users) {
         return res.status(401).json({ message: "Wrong email or password" });
     }
@@ -162,7 +168,7 @@ app.post("/loginDelete", kreverInnlogging, async (req, res) => {
         return res.status(403).json({ message: "Wrong email or password" });
     }
 
-    // sjekker om passord er riktig
+    // sjekker om passord er riktig, bruker bcrypt
     const passordErGyldig = await bcrypt.compare(password, users.password);
     if (!passordErGyldig) {
         return res.status(401).json({ message: "Wrong email or password"})
@@ -171,13 +177,16 @@ app.post("/loginDelete", kreverInnlogging, async (req, res) => {
     res.json({ message: "Successful" });
 })
 
+// rute for å slette data av en bruker
 app.delete('/deleteUser', kreverInnlogging, (req, res) => {
     const { email, password } = req.body;
     const userID = req.session.users.id;
     try {
         const stmt = db.prepare("DELETE FROM users WHERE id = ?");
         stmt.run(userID)
+        // ødelegger session
         req.session.destroy();
+        // sender melding og sender deg til index filen
         res.json({ message: "User was successfully deleted", redirect: "index.html" })
     } catch (error) {
         console.error("Feil ved sletting av kort:", error);
@@ -185,6 +194,7 @@ app.delete('/deleteUser', kreverInnlogging, (req, res) => {
     }
 })
 
+// rute for å starte prosjektet
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`)
 });

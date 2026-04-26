@@ -1,6 +1,7 @@
 let currentWeekOffset = 0; // 0 = this week, -1 = last week, +1 = next week
 let trainingChart = null;
 
+// funksjon for å legge til aktivitet
 async function addActivity(event) {
     event.preventDefault();
 

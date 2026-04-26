@@ -8,10 +8,13 @@
     <script src="login.js" defer></script>
 </head>
 <body>
+    <!-- semantisk html -->
     <header>
         Treningsside
     </header>
     <main>
+        <!-- bruker en form (skjema) hvor du skriver inn data
+        denne formen har en funksjon som kjøres når du trykker på submit knappen -->
         <form onsubmit="loginPerson(event)">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required><br>

@@ -31,9 +31,11 @@
     <p><a href="index.html" class="button">Log inn</a></p>
 
     <script>
+    // når brukeren fyller ut skjemaet og klikker vil funksjonen "addPerson" kjøre
     document.getElementById("newUserForm").addEventListener("submit", async function addPerson(event) {
         event.preventDefault();
 
+        // henter verdier fra html-element
         const firstname = document.getElementById("firstname").value;
         const lastname = document.getElementById("lastname").value;
         const tlf = document.getElementById("tlf").value;
@@ -60,11 +62,6 @@
         alert(result.message);
         window.location.href='./index.html';
     })
-
-    // function passwordLength() {
-    //     document.getElementById("password").maxLength = "6";
-    //     document.getElementById("demo").innerHTML = "Maximum number of characters allowed in the password field is now 6.";
-    // }
     </script>
 </body>
 </html>

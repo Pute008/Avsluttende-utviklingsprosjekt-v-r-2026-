@@ -53,6 +53,7 @@ async function showClasses () {
     }
 }
 
+// funksjon for å legge til aktivitet
 async function registerClassAsActivity(classItem) {
     const today = new Date().toISOString().split('T')[0]; // Gets today's date in YYYY-MM-DD format
     
