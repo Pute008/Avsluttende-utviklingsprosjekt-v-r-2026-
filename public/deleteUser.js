@@ -1,6 +1,6 @@
+// funksjon for å verifisere om du er riktig bruker
 async function loginPersonDelete(event) {
     event.preventDefault();
-    // console.log("hello world")
 
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
@@ -17,20 +17,20 @@ async function loginPersonDelete(event) {
 
     if (response.ok) {
         await deleteUser(email, password);
-        // window.location.href = result.redirect;
     } else {
         alert(result.message);
     }
 }
 
+// funksjon for å slette bruker
 async function deleteUser(email, password) {
-    // event.preventDefault();
-    // const email = document.getElementById("email").value;
-    // const password = document.getElementById("password").value;
 
+    // bruker en rute fra app.js
     const response = await fetch('/deleteUser', {
-        method: "DELETE",  // or POST — just match what app.js uses
+        // metoden er å SLETTE
+        method: "DELETE",
         headers: { "Content-Type": "application/json" },
+        // sender disse verdiene
         body: JSON.stringify({ email, password })
     });
 

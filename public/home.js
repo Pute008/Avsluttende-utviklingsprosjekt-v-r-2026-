@@ -1,5 +1,6 @@
 // this is for index2.html
 
+// funksjon for å logge ut
 async function logout() {
     const response = await fetch("/logout", {
         method: "POST"
@@ -13,6 +14,7 @@ async function logout() {
     }
 }
 
+// funksjon for å vise klasser
 async function showClasses () {
     const tabellBody = document.querySelector("#classList");
     try {
@@ -41,12 +43,13 @@ async function showClasses () {
             timeMinutes.textContent = "Duration (minutes): " + classItem.timeMinutes;
             rad.appendChild(timeMinutes);
 
-            // knapp som kommer opp
+            // knapp som sender deg til classes siden
             const button = document.createElement("button");
             button.textContent = "More Info";
             button.onclick = () => window.location.href = "/classes.html";
             rad.appendChild(button);
 
+            // legger til infoen i html-elementet, den gjør det for all dataen
             tabellBody.appendChild(rad);
         });
     } catch (error) {

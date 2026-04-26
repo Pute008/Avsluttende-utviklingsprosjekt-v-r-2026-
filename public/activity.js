@@ -24,7 +24,7 @@ async function addActivity(event) {
         const result = await response.json();
         alert(result.message);
         loadActivities();
-        // oppdaterer chart-et slik at det har den informasjonen du har lagt in
+        // oppdaterer chart-et slik at den viser info om treningen din
         updateChart(); // Update the chart when new activity is added
         document.getElementById("activity").value = "";
         document.getElementById("date").value = "";

@@ -1,16 +1,17 @@
-
+// funksjon for å vise alle klasser
 async function showClasses () {
     const tabellBody = document.querySelector("#classList");
     try {
+        // bruker en rute i app.ks
         const response = await fetch("/showAllClasses")
         if (!response.ok) {
             throw new Error("Could not get the classes. Are you logged in?");
         }
 
+        // venter på json-filen
         const classes = await response.json();
 
-        console.log(classes);
-
+        // lager info for hvert item som den finner i json-filen
         classes.forEach(classItem => {
             const rad = document.createElement("div");
             rad.classList.add('class');
@@ -45,6 +46,7 @@ async function showClasses () {
             button.onclick = () => registerClassAsActivity(classItem);
             rad.appendChild(button);
 
+            // legger til infoen i html-elementet, den gjør det for all dataen
             tabellBody.appendChild(rad);
         });
     } catch (error) {
@@ -53,7 +55,7 @@ async function showClasses () {
     }
 }
 
-// funksjon for å legge til aktivitet
+// funksjon for å legge til klassen som en aktivitet
 async function registerClassAsActivity(classItem) {
     const today = new Date().toISOString().split('T')[0]; // Gets today's date in YYYY-MM-DD format
     
