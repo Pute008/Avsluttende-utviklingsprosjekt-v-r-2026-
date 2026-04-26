@@ -23,9 +23,14 @@ async function addActivity(event) {
         })
         const result = await response.json();
         alert(result.message);
+        // kjører en funksjon
         loadActivities();
+
+        // kjører en funksjon
         // oppdaterer chart-et slik at den viser info om treningen din
         updateChart(); // Update the chart when new activity is added
+
+        // tømmer input-feltene slik at de er klare for å li lagt til ny data
         document.getElementById("activity").value = "";
         document.getElementById("date").value = "";
         document.getElementById("duration").value = "";
@@ -35,14 +40,20 @@ async function addActivity(event) {
     }
 }
 
+// viser aktivitetene dine
 async function loadActivities() {
     try {
+        // gjør et api-kall i app.js
         const response = await fetch("/showYourActivity");
+        // konverterer svaret til json
         const activities = await response.json();
         
+        // lager html-en
         let html = "<h2>Your Activities</h2>";
+        // hvis ingen aktiviteter, vil den vise ingen ting
         if (activities.length === 0) {
             html += "<p>No activities yet</p>";
+        // for hver aktivitet vil den lage en "ul" og "li", den henter deretter info fra json-filen
         } else {
             html += "<ul>";
             activities.forEach(act => {
@@ -50,7 +61,7 @@ async function loadActivities() {
             });
             html += "</ul>";
         }
-        
+        // finner en id og setter deretter infoen du har laget i html-filen
         const div = document.getElementById("activities-list");
         if (div) {
             div.innerHTML = html;
@@ -61,6 +72,7 @@ async function loadActivities() {
 }
 
 // Get the start and end date of a specific week
+// Finner start (mandag) og slutt (søndag) for en gitt uke
 function getWeekDateRange(offset = 0) {
     const now = new Date();
     const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday...
@@ -80,6 +92,7 @@ function getWeekDateRange(offset = 0) {
 }
 
 // Update the week display text
+// Oppdaterer teksten som viser hvilken uke som er valgt
 function updateWeekDisplay() {
     const { monday, sunday } = getWeekDateRange(currentWeekOffset);
     const mondayStr = monday.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -88,6 +101,7 @@ function updateWeekDisplay() {
 }
 
 // Navigate to previous week
+// Går til forrige uke og oppdaterer visning og graf
 function previousWeek() {
     currentWeekOffset--;
     updateWeekDisplay();
@@ -95,6 +109,7 @@ function previousWeek() {
 }
 
 // Navigate to next week
+// Går til neste uke og oppdaterer visning og graf
 function nextWeek() {
     currentWeekOffset++;
     updateWeekDisplay();
@@ -102,6 +117,7 @@ function nextWeek() {
 }
 
 // Update the chart with activities for the selected week
+// Oppdaterer grafen med aktiviteter for valgt uke
 async function updateChart() {
     try {
         const response = await fetch("/showYourActivity");
@@ -178,6 +194,7 @@ async function updateChart() {
     }
 }
 
+// Kjøres når siden lastes inn: viser uke, aktiviteter og graf
 window.addEventListener("load", () => {
     updateWeekDisplay();
     loadActivities();
