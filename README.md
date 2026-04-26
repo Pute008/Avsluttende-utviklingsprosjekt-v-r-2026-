@@ -27,10 +27,10 @@ Hva jeg må ha med
 - [ ] logout (må jobbe mer med)
 
 
-## Hva jeg lager
+# Hva jeg lager
 I dette prosjektet lager jeg en nettside hvor du kan logge treningen din. Du har mulighet til å registrere at du har trent, og du kan melde deg på en treningstime, dette vil bli registrert som en aktivitet du har deltatt på. Jeg har lagd en funksjon som gjør det mulig å slette brukeren sin.
 
-## Databasen
+# Databasen
 
 <img src="pictures/AvsluttendeProgramVår2026.jpg.png" alt="databasemodell" width="800px">
 
@@ -96,9 +96,9 @@ I dette prosjektet lager jeg en nettside hvor du kan logge treningen din. Du har
 | FK  | timeID | INTEGER → schedules(id)    |
 |     | status | TEXT                       |
 
-## Backend
+# Backend
 
-### app.js
+## app.js
 
 Laster ned alle pakker for Node JS
 ``` js
@@ -136,7 +136,7 @@ app.listen(port, () => {
 });
 ```
 
-# **kanskje ha med session koden??????**
+### **kanskje ha med session koden??????**
 
 Bruker denne funksjonen for å håndtere innloggingen
 
@@ -300,16 +300,248 @@ app.delete('/deleteUser', kreverInnlogging, (req, res) => {
 ```
 
 
-## Frontend
+# Frontend
 
-### index
+## index - new user - home page
 
+### index.html
 
-### classes
+``` html
+<main>
+    <form onsubmit="loginPerson(event)">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
 
-### options - delete user
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
 
-### activity
+        <button type="submit">Logg inn</button>
+        <p><a href="newUser.html" class="button">New? click here to make a new user!</a></p>
+    </form>
+</main>
+```
+
+### login.js
+
+``` js
+async function loginPerson(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const response = await fetch('/login', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+        alert(result.message);
+        window.location.href = result.redirect;
+    } else {
+        alert(result.message);
+    }
+}
+```
+
+---
+
+### newUser.html og js
+
+``` html
+<form id="newUserForm">
+    <label for="firstname">Firstname:</label>
+    <input type="text" id="firstname" name="firstname" required><br>
+
+    <label for="lastname">Lastname:</label>
+    <input type="text" id="lastname" name="lastname" required><br>
+
+    <label for="number">Tlf number:</label>
+    <input type="text" id="tlf" name="tlf" required><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required minlength="6"><br>
+    <p id="demo"></p>
+
+    <button type="submit">Create User</button>
+</form>
+
+<p><a href="index.html" class="button">Log inn</a></p>
+```
+
+``` js
+document.getElementById("newUserForm").addEventListener("submit", async function addPerson(event) {
+    event.preventDefault();
+
+    const firstname = document.getElementById("firstname").value;
+    const lastname = document.getElementById("lastname").value;
+    const tlf = document.getElementById("tlf").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    console.log(email)
+    const response = await fetch("/newUser", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            firstname,
+            lastname,
+            tlf,
+            email,
+            password
+        })
+        
+    });
+
+    const result = await response.json();
+    alert(result.message);
+    window.location.href='./index.html';
+})
+```
+
+---
+
+### index2.html
+
+``` html
+
+```
+
+### home.js
+
+## classes
+
+### classes.html
+
+``` html
+<main id="classList">
+
+</main>
+```
+
+### classes.js
+
+``` js
+
+async function showClasses () {
+    const tabellBody = document.querySelector("#classList");
+    try {
+        const response = await fetch("/showAllClasses")
+        if (!response.ok) {
+            throw new Error("Could not get the classes. Are you logged in?");
+        }
+
+        const classes = await response.json();
+
+        console.log(classes);
+
+        classes.forEach(classItem => {
+            const rad = document.createElement("div");
+            rad.classList.add('class');
+
+            const title = document.createElement("h1");
+            title.textContent = classItem.title;
+            rad.appendChild(title);
+
+            const notes = document.createElement("p");
+            notes.textContent = "Notes: " + classItem.notes;
+            rad.appendChild(notes);
+
+            const fullName = document.createElement("p");
+            fullName.textContent = `Instructor: ${classItem.firstname} ${classItem.lastname}`;
+            rad.appendChild(fullName);
+
+            const maxParticipants = document.createElement("p")
+            maxParticipants.textContent = "Max Participants: " + classItem.maxParticipants;
+            rad.appendChild(maxParticipants);
+
+            const timeMinutes = document.createElement("p")
+            timeMinutes.textContent = "Duration (minutes): " + classItem.timeMinutes;
+            rad.appendChild(timeMinutes);
+
+            const button = document.createElement("button");
+            button.textContent = "Register as Activity";
+            button.onclick = () => registerClassAsActivity(classItem);
+            rad.appendChild(button);
+
+            tabellBody.appendChild(rad);
+        });
+    } catch (error) {
+        console.error("Fail:", error);
+        tabellBody.innerHTML = `<div>Could not get the classes: ${error.message}</div>`;
+    }
+}
+
+async function registerClassAsActivity(classItem) {
+    const today = new Date().toISOString().split('T')[0];
+    
+    try {
+        const response = await fetch("/addActivity", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                activity: classItem.title,
+                date: today,
+                duration: classItem.timeMinutes
+            })
+        });
+        
+        const result = await response.json();
+        alert(result.message);
+    } catch (error) {
+        console.error("Error registering class as activity:", error);
+        alert("Feil: " + error.message);
+    }
+}
+document.addEventListener("DOMContentLoaded", showClasses);
+```
+
+## options - delete user
+
+### options.html
+
+``` html
+
+```
+
+### options.js
+
+---
+
+### deleteUser.html
+
+``` html
+
+```
+
+### deleteUser.js
+
+## activity
+
+### activity.html
+
+``` html
+
+```
+
+### activity.js
 
 ## GDPR og UU
+Jeg følger GDPR med at informasjonen er hemmelig.
+Passord blir hashet.
+All info om deg blir slettet når brukeren slettes.
+
+Jeg følger UU med å ha mulighet for mobilfunksjonalitet
 
