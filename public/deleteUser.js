@@ -30,7 +30,7 @@ async function deleteUser(email, password) {
         // metoden er å SLETTE
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        // sender disse verdiene
+        // sender disse verdiene i json format
         body: JSON.stringify({ email, password })
     });
 

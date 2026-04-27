@@ -23,10 +23,12 @@ async function showClasses () {
             throw new Error("Could not get the classes. Are you logged in?");
         }
 
+        // henter info som et json format (venter på json-fil)
         const classes = await response.json();
 
         console.log(classes);
 
+        // lager forskjellige html elementer
         classes.forEach(classItem => {
             const rad = document.createElement("div");
             rad.classList.add('class');

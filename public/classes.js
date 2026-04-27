@@ -2,7 +2,7 @@
 async function showClasses () {
     const tabellBody = document.querySelector("#classList");
     try {
-        // bruker en rute i app.ks
+        // bruker en rute i app.js
         const response = await fetch("/showAllClasses")
         if (!response.ok) {
             throw new Error("Could not get the classes. Are you logged in?");
