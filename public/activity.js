@@ -87,6 +87,8 @@ function getWeekDateRange(offset = 0) {
     // Create Sunday of same week
     const sunday = new Date(monday);
     sunday.setDate(sunday.getDate() + 6);
+    // new*
+    // sunday.setHours(23, 59, 59, 999);
     
     return { monday, sunday };
 }
@@ -139,7 +141,9 @@ async function updateChart() {
         
         // Count activities for each day of the week
         activities.forEach(act => {
+            // new*
             const actDate = new Date(act.date);
+            // const actDate = new Date(act.date + 'T00:00:00');
             
             // Check if activity is in the selected week
             if (actDate >= monday && actDate <= sunday) {
