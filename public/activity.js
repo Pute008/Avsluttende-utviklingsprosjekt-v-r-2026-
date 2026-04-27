@@ -80,6 +80,9 @@ function getWeekDateRange(offset = 0) {
     // Calculate Monday of current week
     const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
     const monday = new Date(now.setDate(diff));
+
+    // new*
+    monday.setHours(0, 0, 0, 0);
     
     // Apply week offset
     monday.setDate(monday.getDate() + offset * 7);
@@ -88,7 +91,7 @@ function getWeekDateRange(offset = 0) {
     const sunday = new Date(monday);
     sunday.setDate(sunday.getDate() + 6);
     // new*
-    // sunday.setHours(23, 59, 59, 999);
+    sunday.setHours(23, 59, 59, 999);
     
     return { monday, sunday };
 }
