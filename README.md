@@ -8,6 +8,13 @@ av Felix Ellingsen Westby
 | Database | SQLite |
 | Server Port | 3000 |
 
+
+## [1. Kom i gang](#kom-i-gang)
+## [2. Hva jeg lager](#hva-jeg-lager)
+## [3. Databasen](#databasen)
+## [4. Backend](#backend)
+## [5. Frontend](#frontend)
+
 # Kom i gang
 1. Klon repoet
 2. Kjør npm init -y og npm install
