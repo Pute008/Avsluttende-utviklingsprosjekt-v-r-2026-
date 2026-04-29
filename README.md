@@ -10,26 +10,19 @@ av Felix Ellingsen Westby
 
 # Kom i gang
 1. Klon repoet
-2. Kjør npm install
+2. Kjør npm init -y og npm install
+```cmd
+npm init -y
+npm install
+```
 3. Last ned alle pakker du trenger (ligger også under backend)
 ## Notater
 
-I dette prosjektet skal jeg lage en nettside hvor du logge at du har vært på trening, hvor du kan bli venner med andre brukere. Administrator brukere kan opprette treningstimer som andre brukere kan melde seg på
-
-Hva jeg må ha med
+Hva jeg har med:
 - [X] Database (SQL eller MariaDB)
-- [x] Node - app.js
+- [x] Backend - Node og app.js
+- [X] Frontend
 - [x] public mappe
-- [x] hidden mappe
-- [X] ruter og api endepunkter
-- [X] classes - viser klassene
-
-- [ ] friend-list (skrivefunksjon! folk må skrive inn ID-en!)
-- [X] activity (bruke chart-js for å lage statistikk)
-- [X] registration (lage en lenke av url-en)
-
-- [X] logout (må jobbe mer med)
-
 
 # Hva jeg lager
 I dette prosjektet lager jeg en nettside hvor du kan logge treningen din. Du har mulighet til å registrere at du har trent, og du kan melde deg på en treningstime, dette vil bli registrert som en aktivitet du har deltatt på. Jeg har lagd en funksjon som gjør det mulig å slette brukeren sin.
@@ -931,4 +924,3 @@ Dette produktet følger GDPR med at:
 Universell utforming (UU) sikrer at produkter, tjenester og digitale løsninger kan brukes av alle mennesker, uavhengig av funksjonsevne. Dette produktet følger UU med å:
 - Mobilfunksjonalitet er på plass
 - Semantisk HTML for å lage struktur i koden
-
