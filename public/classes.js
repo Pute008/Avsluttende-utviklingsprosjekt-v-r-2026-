@@ -12,6 +12,7 @@ async function showClasses () {
         const classes = await response.json();
 
         // lager info for hvert item som den finner i json-filen
+        // går gjennom all info i json filen
         classes.forEach(classItem => {
             const rad = document.createElement("div");
             rad.classList.add('class');
