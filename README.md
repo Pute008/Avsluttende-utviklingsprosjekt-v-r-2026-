@@ -13,7 +13,13 @@ av Felix Ellingsen Westby
 ## [2. Hva jeg lager](#hva-jeg-lager)
 ## [3. Databasen](#databasen)
 ## [4. Backend](#backend)
+### - [app.js](#appjs)
 ## [5. Frontend](#frontend)
+### -[index - new user - home page](#-index---new-user---home-page)
+### -[classes](#classes-1)
+### -[options - delete user](#-options---delete-user)
+### -[activity](#activity-1)
+## [6. GDPR og UU](#gdpr-og-uu)
 
 # Kom i gang
 1. Klon repoet
@@ -23,13 +29,6 @@ npm init -y
 npm install
 ```
 3. Last ned alle pakker du trenger (ligger også under backend)
-## Notater
-
-Hva jeg har med:
-- [X] Database (SQL eller MariaDB)
-- [x] Backend - Node og app.js
-- [X] Frontend
-- [x] public mappe
 
 # Hva jeg lager
 I dette prosjektet lager jeg en nettside hvor du kan logge treningen din. Du har mulighet til å registrere at du har trent, og du kan melde deg på en treningstime, dette vil bli registrert som en aktivitet du har deltatt på. Jeg har lagd en funksjon som gjør det mulig å slette brukeren sin.
@@ -145,8 +144,6 @@ For å kjøre prosjektet i node
 ```cmd
 node app.js
 ```
-
-### **kanskje ha med session koden??????**
 
 Bruker denne funksjonen for å håndtere innloggingen
 
@@ -309,7 +306,6 @@ app.delete('/deleteUser', kreverInnlogging, (req, res) => {
 })
 ```
 
-
 # Frontend
 
 ## index - new user - home page
@@ -317,11 +313,14 @@ app.delete('/deleteUser', kreverInnlogging, (req, res) => {
 ### index.html
 
 ``` html
+<!-- Innloggingsskjema som sender data til loginPerson() -->
 <main>
     <form onsubmit="loginPerson(event)">
+        <!-- E-post input -->
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required><br>
 
+        <!-- Passord input -->
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required><br>
 
@@ -334,12 +333,16 @@ app.delete('/deleteUser', kreverInnlogging, (req, res) => {
 ### login.js
 
 ``` js
+// Logger inn bruker ved å sende e-post og passord til backend
 async function loginPerson(event) {
+    // Hindrer refresh av siden
     event.preventDefault();
 
+    // Henter verdier fra input-feltene
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
+    // Sender innloggingsdata til server
     const response = await fetch('/login', {
         method: "POST",
         headers: {
@@ -350,6 +353,7 @@ async function loginPerson(event) {
 
     const result = await response.json();
 
+    // Ved suksess: vis melding og redirect
     if (response.ok) {
         alert(result.message);
         window.location.href = result.redirect;
@@ -364,6 +368,7 @@ async function loginPerson(event) {
 ### newUser.html og js
 
 ``` html
+<!-- Skjema for registrering av ny bruker -->
 <form id="newUserForm">
     <label for="firstname">Firstname:</label>
     <input type="text" id="firstname" name="firstname" required><br>
@@ -388,15 +393,18 @@ async function loginPerson(event) {
 ```
 
 ``` js
+// Event listener for registrering av ny bruker
 document.getElementById("newUserForm").addEventListener("submit", async function addPerson(event) {
     event.preventDefault();
 
+    // Henter inputverdier
     const firstname = document.getElementById("firstname").value;
     const lastname = document.getElementById("lastname").value;
     const tlf = document.getElementById("tlf").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
+    // Sender brukerdata til backend
     console.log(email)
     const response = await fetch("/newUser", {
         method: "POST",
@@ -424,10 +432,78 @@ document.getElementById("newUserForm").addEventListener("submit", async function
 ### index2.html
 
 ``` html
+<main >
+    <div id="classList">
 
+    </div>
+</main>
 ```
 
 ### home.js
+
+```js
+// Logger ut bruker og avslutter session
+async function logout() {
+    const response = await fetch("/logout", {
+        method: "POST"
+    });
+
+    if (response.ok) {
+        alert("You are logged out.");
+        window.location.href = "/";
+    } else {
+        alert("Something went wrong");
+    }
+}
+
+// Henter og viser alle tilgjengelige treningsklasser
+async function showClasses () {
+    const tabellBody = document.querySelector("#classList");
+    try {
+        const response = await fetch("/showAllClasses")
+        if (!response.ok) {
+            throw new Error("Could not get the classes. Are you logged in?");
+        }
+
+        // henter info som et json format (venter på json-fil)
+        const classes = await response.json();
+
+        console.log(classes);
+
+        // Lager HTML for hver klasse
+        classes.forEach(classItem => {
+            const rad = document.createElement("div");
+            rad.classList.add('class');
+
+            const title = document.createElement("h1");
+            title.textContent = classItem.title;
+            rad.appendChild(title);
+
+            const maxParticipants = document.createElement("p")
+            maxParticipants.textContent = "Max Participants: " + classItem.maxParticipants;
+            rad.appendChild(maxParticipants);
+
+            const timeMinutes = document.createElement("p")
+            timeMinutes.textContent = "Duration (minutes): " + classItem.timeMinutes;
+            rad.appendChild(timeMinutes);
+
+            // knapp som sender deg til classes siden
+            const button = document.createElement("button");
+            button.textContent = "More Info";
+            button.onclick = () => window.location.href = "/classes.html";
+            rad.appendChild(button);
+
+            // legger til infoen i html-elementet, den gjør det for all dataen
+            tabellBody.appendChild(rad);
+        });
+    } catch (error) {
+        console.error("Fail:", error);
+        tabellBody.innerHTML = `<div>Could not get the classes: ${error.message}</div>`;
+    }
+}
+// Kjøres automatisk ved lasting av siden
+showClasses()
+```
 
 ## classes
 
@@ -556,10 +632,6 @@ document.addEventListener("DOMContentLoaded", showClasses);
         <div>
             <button onclick="logout()">Logout</button>
         </div>
-
-        <div>
-            <!-- skal være en logout funksjon (kanskje et popup vindu?) -->
-        </div>
     </main>
     <footer></footer>
 </body>
@@ -583,19 +655,18 @@ async function logout() {
 }
 
 // async funksjon (venter med å skjøre før alt er klart)
+// Henter informasjon om innlogget bruker
 async function userInfo() {
-    // finner et element med en id
+    // finner et element med en viss id
     const userInfoDiv = document.querySelector("#userInfo");
     try {
-        // bruker en rute fra backend
         const response = await fetch("/userInfo");
         if (!response.ok) {
             throw new Error("Could not get info. Are you logged in?");
         }
-        // venter på at svaret fra serveren, skal bli omgjort fra JSON-format til et JavaScript-objekt, og lagrer det i variabelen (user)
         const user = await response.json();
 
-        // lager et div element hvor info-en skal stå
+        // Lager kort med brukerdata
         const card = document.createElement("div");
         card.classList.add('userCard');
 
@@ -620,7 +691,8 @@ async function userInfo() {
         userId.textContent = `User ID: ${user.id}`;
         card.appendChild(userId);
 
-        userInfoDiv.innerHTML = ""; // Clear previous content
+        userInfoDiv.innerHTML = "";
+
         // legger inn all info-en som den har hentet
         userInfoDiv.appendChild(card);
     } catch (error) {
@@ -629,7 +701,8 @@ async function userInfo() {
     }
 }
 
-// Call the function when page loads
+
+// Kjør funksjonen når siden er lastet
 document.addEventListener("DOMContentLoaded", userInfo);
 ```
 
@@ -638,10 +711,69 @@ document.addEventListener("DOMContentLoaded", userInfo);
 ### deleteUser.html
 
 ``` html
+<main>
+    <form onsubmit="loginPersonDelete(event)">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
 
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+
+        <button type="submit">Logg inn</button>
+    </form>
+</main>
 ```
 
 ### deleteUser.js
+
+```js
+// funksjon for å verifisere bruker før sletting
+async function loginPersonDelete(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const response = await fetch('/loginDelete', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+    });
+
+    const result = await response.json();
+
+    // Sletter bruker kun hvis verifisering er OK
+    if (response.ok) {
+        await deleteUser(email, password);
+    } else {
+        alert(result.message);
+    }
+}
+
+// Sender DELETE-request til backend
+async function deleteUser(email, password) {
+
+    // bruker en rute fra app.js
+    const response = await fetch('/deleteUser', {
+        // metoden er å SLETTE
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        // sender disse verdiene i json format
+        body: JSON.stringify({ email, password })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+        alert(result.message);
+        window.location.href = result.redirect;
+    } else {
+        alert(result.message);
+    }
+}
+```
 
 ## activity
 
@@ -658,7 +790,6 @@ document.addEventListener("DOMContentLoaded", userInfo);
     <script src="activity.js" defer></script>
 </head>
 <body>
-    <!-- semantisk html -->
     <header><h1>Aktivitet</h1></header>
     <menu>
         <li><a href="index2.html">Main</a></li>
@@ -668,6 +799,7 @@ document.addEventListener("DOMContentLoaded", userInfo);
         <li><a href="classes.html">Classes</a></li>
     </menu>
     <main>
+        <!-- Skjema for å legge til ny aktivitet -->
         <form onsubmit="addActivity(event)">
             <label for="activity">Activity</label>
             <select name="activity" id="activity" required>
@@ -686,8 +818,10 @@ document.addEventListener("DOMContentLoaded", userInfo);
             <button type="submit">Submit</button>
         </form>
 
+        <!-- Viser liste med brukerens aktiviteter -->
         <div id="activities-list"></div>
 
+        <!-- Seksjon for ukentlig treningsstatistikk -->
         <div>
             <h2>Training This Week</h2>
             <!-- tabellen fra chart.js -->
@@ -696,6 +830,7 @@ document.addEventListener("DOMContentLoaded", userInfo);
                 <span id="weekDisplay" style="font-weight: bold;"></span>
                 <button onclick="nextWeek()" style="padding: 8px 15px;">Next Week →</button>
             </div>
+            <!-- Diagram fra Chart.js -->
             <canvas id="myChart"></canvas>
         </div>
     </main>
@@ -712,18 +847,21 @@ document.addEventListener("DOMContentLoaded", userInfo);
 ### activity.js
 
 ```js
-let currentWeekOffset = 0; // 0 = this week, -1 = last week, +1 = next week
+// Holder styr på hvilken uke som vises
+let currentWeekOffset = 0; // 0 = denne uken, -1 = forrige uke week, +1 = neste uke
 let trainingChart = null;
 
-// funksjon for å legge til aktivitet
+// Legger til ny aktivitet i databasen
 async function addActivity(event) {
     event.preventDefault();
 
+    // Henter verdier fra skjema
     const activity = document.getElementById("activity").value;
     const date = document.getElementById("date").value;
     const duration = document.getElementById("duration").value;
 
     try {
+        // Sender aktivitet til backend
         const response = await fetch("/addActivity", {
             method: "POST",
             headers: {
@@ -737,12 +875,10 @@ async function addActivity(event) {
         })
         const result = await response.json();
         alert(result.message);
-        // kjører en funksjon
-        loadActivities();
 
-        // kjører en funksjon
-        // oppdaterer chart-et slik at den viser info om treningen din
-        updateChart(); // Update the chart when new activity is added
+        // Oppdaterer visning og graf
+        loadActivities();
+        updateChart();
 
         // tømmer input-feltene slik at de er klare for å li lagt til ny data
         document.getElementById("activity").value = "";
@@ -754,17 +890,14 @@ async function addActivity(event) {
     }
 }
 
-// viser aktivitetene dine
+// Henter og viser alle aktiviteter brukeren har registrert
 async function loadActivities() {
     try {
-        // gjør et api-kall i app.js
         const response = await fetch("/showYourActivity");
-        // konverterer svaret til json
         const activities = await response.json();
         
-        // lager html-en
         let html = "<h2>Your Activities</h2>";
-        // hvis ingen aktiviteter, vil den vise ingen ting
+        // Hvis ingen aktiviteter finnes
         if (activities.length === 0) {
             html += "<p>No activities yet</p>";
         // for hver aktivitet vil den lage en "ul" og "li", den henter deretter info fra json-filen
@@ -775,7 +908,8 @@ async function loadActivities() {
             });
             html += "</ul>";
         }
-        // finner en id og setter deretter infoen du har laget i html-filen
+        
+        // Setter HTML i riktig div
         const div = document.getElementById("activities-list");
         if (div) {
             div.innerHTML = html;
@@ -785,33 +919,26 @@ async function loadActivities() {
     }
 }
 
-// Get the start and end date of a specific week
-// Finner start (mandag) og slutt (søndag) for en gitt uke
+// Finner mandag og søndag for valgt uke
 function getWeekDateRange(offset = 0) {
     const now = new Date();
-    const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday...
+    const dayOfWeek = now.getDay(); // 0 = mandag, 1 = søndag
     
-    // Calculate Monday of current week
     const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
     const monday = new Date(now.setDate(diff));
 
-    // new*
     monday.setHours(0, 0, 0, 0);
     
-    // Apply week offset
     monday.setDate(monday.getDate() + offset * 7);
     
-    // Create Sunday of same week
     const sunday = new Date(monday);
     sunday.setDate(sunday.getDate() + 6);
-    // new*
     sunday.setHours(23, 59, 59, 999);
     
     return { monday, sunday };
 }
 
-// Update the week display text
-// Oppdaterer teksten som viser hvilken uke som er valgt
+// Oppdaterer tekst som viser valgt uke
 function updateWeekDisplay() {
     const { monday, sunday } = getWeekDateRange(currentWeekOffset);
     const mondayStr = monday.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -819,7 +946,6 @@ function updateWeekDisplay() {
     document.getElementById("weekDisplay").textContent = `${mondayStr} - ${sundayStr}`;
 }
 
-// Navigate to previous week
 // Går til forrige uke og oppdaterer visning og graf
 function previousWeek() {
     currentWeekOffset--;
@@ -827,7 +953,6 @@ function previousWeek() {
     updateChart();
 }
 
-// Navigate to next week
 // Går til neste uke og oppdaterer visning og graf
 function nextWeek() {
     currentWeekOffset++;
@@ -835,17 +960,15 @@ function nextWeek() {
     updateChart();
 }
 
-// Update the chart with activities for the selected week
-// Oppdaterer grafen med aktiviteter for valgt uke
+// Lager og oppdaterer graf med aktiviteter per dag
 async function updateChart() {
     try {
         const response = await fetch("/showYourActivity");
         const activities = await response.json();
         
-        // Get week date range
         const { monday, sunday } = getWeekDateRange(currentWeekOffset);
-        
-        // Initialize day counts (Monday to Sunday)
+
+        // Teller aktiviteter per ukedag
         const dayCounts = {
             'Monday': 0,
             'Tuesday': 0,
@@ -856,13 +979,10 @@ async function updateChart() {
             'Sunday': 0
         };
         
-        // Count activities for each day of the week
         activities.forEach(act => {
-            // new*
             const actDate = new Date(act.date);
             // const actDate = new Date(act.date + 'T00:00:00');
             
-            // Check if activity is in the selected week
             if (actDate >= monday && actDate <= sunday) {
                 const dayName = actDate.toLocaleDateString('en-US', { weekday: 'long' });
                 if (dayCounts.hasOwnProperty(dayName)) {
@@ -874,12 +994,12 @@ async function updateChart() {
         const labels = Object.keys(dayCounts);
         const data = Object.values(dayCounts);
         
-        // Destroy existing chart if it exists
+        // Fjerner gammelt chart før nytt opprettes
         if (trainingChart) {
             trainingChart.destroy();
         }
         
-        // Create new chart
+        // Lager nytt stolpediagram
         const ctx = document.getElementById('myChart');
         trainingChart = new Chart(ctx, {
             type: 'bar',
@@ -915,7 +1035,8 @@ async function updateChart() {
     }
 }
 
-// Kjøres når siden lastes inn: viser uke, aktiviteter og graf
+
+// Kjøres når siden lastes ferdig
 window.addEventListener("load", () => {
     updateWeekDisplay();
     loadActivities();
@@ -923,7 +1044,7 @@ window.addEventListener("load", () => {
 });
 ```
 
-## GDPR og UU
+# GDPR og UU
 Dette produktet følger GDPR med at:
 - Passord blir kryptert slik at trusselaktører og fremmede ikke kan lese det 
 - All info av en bruker blir slettet, ingen ting er igjen
