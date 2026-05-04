@@ -32,6 +32,14 @@ function kreverInnlogging(req, res, next) {
     next();
 }
 
+// Det er mulig å lage middleware for adminkontoer
+function kreverAdminTilgang(req, res, next) {
+    if(!req.session.users.role == "admin") {
+        return res.redirect('/index2.html');
+    }
+    next();
+}
+
 app.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const users = db.prepare("SELECT * FROM users WHERE email = ?").get(email);
@@ -44,12 +52,7 @@ app.post("/login", async (req, res) => {
         return res.status(401).json({ message: "Wrong email or password"})
     }
 
-    // lage administrator konto
-    // if (user) {
-    //     req.session.users = { id: users.id, firstname: users.firstname, lastname: users.lastname };
-    // }
-
-    req.session.users = { id: users.id, firstname: users.firstname, lastname: users.lastname };
+    req.session.users = { id: users.id, firstname: users.firstname, lastname: users.lastname, role: users.role };
     res.json({ message: "Login successful", redirect: "index2.html" })
 })
 
@@ -75,6 +78,8 @@ app.get('/users', kreverInnlogging, (req, res) => {
 
 app.get('/userInfo', kreverInnlogging, (req, res) => {
     const userID = req.session.users.id;
+    const userRole = req.session.users.role
+    console.log(userRole)
     const user = db.prepare("SELECT * FROM users WHERE id = ?").get(userID);
     res.json(user);
 })
@@ -85,7 +90,7 @@ app.get('/main', kreverInnlogging, (req, res) => {
 })
 
 app.get('/activity', kreverInnlogging, (req, res) => {
-    res.sendFile(__dirname + "/hidden/activity.html");
+    res.sendFile(__dirname + "/activity.html");
 })
 
 // rute som viser aktiviteter
@@ -119,12 +124,12 @@ app.post('/addActivity', kreverInnlogging, (req, res) => {
     }
 })
 
-app.get('/friendList', kreverInnlogging, (req, res) => {
+app.get('/friendList', kreverAdminTilgang, (req, res) => {
     res.sendFile(__dirname + "/hidden/friendList.html");
 })
 
 app.get('/classes', kreverInnlogging, (req, res) => {
-    res.sendFile(__dirname + "/hidden/classes.html");
+    res.sendFile(__dirname + "/classes.html");
 })
 
 app.get('/showAllClasses', kreverInnlogging, (req, res) => {
