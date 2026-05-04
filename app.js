@@ -34,7 +34,7 @@ function kreverInnlogging(req, res, next) {
 
 // Det er mulig å lage middleware for adminkontoer
 function kreverAdminTilgang(req, res, next) {
-    if(!req.session.users.role == "admin") {
+    if(req.session.users.role != "admin") {
         return res.redirect('/index2.html');
     }
     next();
